@@ -17,4 +17,4 @@
 
 1. **Клонирование репозитория**:
    ```bash
-   git clone https://github.com/yourusername/HatShop.git
+   git clone https://github.com/Bilalchik/HatShop.git
