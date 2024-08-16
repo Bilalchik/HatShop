@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.db import models
 
-# User = get_user_model()
+User = get_user_model()
 class Category(models.Model):
     title = models.CharField(
         'Название',
@@ -78,7 +78,7 @@ class Cap(models.Model):
 
     category = models.ManyToManyField(Category)
 
-    size = models.ManyToManyField(Size)
+    sizes = models.ManyToManyField(Size)
 
     images = models.ManyToManyField('Image')
 
@@ -122,10 +122,10 @@ class Brand(models.Model):
 
 
 class Cart(models.Model):
-    # user = models.ForeignKey(
-    #     User,
-    #     on_delete=models.PROTECT
-    # )
+    user = models.ForeignKey(
+        User,
+        on_delete=models.PROTECT
+    )
     cap = models.ForeignKey(
         Cap,
         on_delete=models.PROTECT

@@ -1,6 +1,8 @@
 from rest_framework import serializers
 
+from user.models import MyUser
 from .models import Cap, Category, Banner, Image, Brand, Size
+
 
 
 class BannerListSerializer(serializers.ModelSerializer):
@@ -77,8 +79,33 @@ class CapDetailSerializer(serializers.ModelSerializer):
     category = CategoryListSerializer(many=True)
     images = ImageDetailSerializer(many=True)
     brands = BrandDetailSerializer(many=True)
-    size = SizeDetailSerializer(many=True)
+    sizes = SizeDetailSerializer(many=True)
 
     class Meta:
         model = Cap
         fields = '__all__'
+
+
+class UserProfilSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = MyUser
+        fields = (
+            'id',
+            'username',
+            'email',
+            'phone_number',
+            'cover'
+        )
+
+class UserProfilUpdateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = MyUser
+        fields = (
+            'username',
+            'email',
+            'phone_number',
+            'cover'
+        )
+

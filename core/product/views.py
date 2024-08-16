@@ -1,13 +1,17 @@
-from rest_framework.views import Response, APIView
+from rest_framework.views import APIView
+from rest_framework.response import Response
 from rest_framework import status
 from django.shortcuts import get_object_or_404
 from django.db.models import F
 
+
+from user.models import MyUser
 from .models import Cap, Banner, Brand
 from .serializers import (
     CapListSerializer, BannerListSerializer, BrandListSerializer, DiscountListSerializer,
-    CapDetailSerializer,
+    CapDetailSerializer, UserProfilSerializer, UserProfilUpdateSerializer
 )
+
 
 class CapListViews(APIView):
     def get(self, request):
@@ -61,3 +65,20 @@ class CapDetailViews(APIView):
         product.delete()
 
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+class UserProfilViews(APIView):
+    def get(self, request):
+        user = get_object_or_404(MyUser, id=request.user.id)
+        serializer = UserProfilSerializer(user)
+
+        return Response(serializer.data)
+
+    def patch(self, request):
+        user = get_object_or_404(MyUser, id=request.user.id)
+        serializer = UserProfilUpdateSerializer(user, data=request.data, partial=True)
+
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+        return Response(status=status.HTTP_400_BAD_REQUEST)
