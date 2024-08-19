@@ -3,6 +3,12 @@ from rest_framework import serializers
 from .models import Category, Image, Brand, Product, Banner
 
 
+class ImageListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Image
+        fields = '__all__'
+
+
 class BannerListSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -38,6 +44,28 @@ class ProductListSerializers(serializers.ModelSerializer):
         )
 
 
+class ProductDetailSerializer(serializers.ModelSerializer):
+    category = CategoryListSerializer()
+    brands = BrandListSerializer(many=True)
+    images = ImageListSerializer(many=True)
+
+    class Meta:
+        model = Product
+        fields = (
+            'id',
+            'title',
+            'brands',
+            'category',
+            'logo',
+            'price',
+            'discount_price',
+            'description',
+            'images',
+            'get_size_display',
+            'created_date',
+        )
+
+
 class SpecialProductListSerializers(serializers.ModelSerializer):
     category = CategoryListSerializer()
 
@@ -51,3 +79,12 @@ class SpecialProductListSerializers(serializers.ModelSerializer):
             'price',
             'discount_price'
         )
+
+
+class BrandCreateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Brand
+        fields = ('logo', 'title')
+
+

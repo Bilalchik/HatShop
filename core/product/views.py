@@ -1,9 +1,11 @@
 from rest_framework.views import APIView, Response
+from rest_framework import generics
 from django.db.models import F
 
 from .models import Category, Image, Brand, Product, Banner
 from .serializers import (
-    ProductListSerializers, BannerListSerializer, BrandListSerializer, SpecialProductListSerializers)
+    ProductListSerializers, BannerListSerializer, BrandListSerializer, SpecialProductListSerializers,
+    BrandCreateSerializer, ProductDetailSerializer)
 
 
 class ProductListView(APIView):
@@ -30,4 +32,24 @@ class ProductListView(APIView):
         }
 
         return Response(data)
+
+
+class ProductDetailView(generics.RetrieveAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductDetailSerializer
+
+    def get(self, request, *args, **kwargs):
+        product = self.queryset.first()
+
+        product_serializer = ProductDetailSerializer(product)
+
+        recommended_products = Product.objects.filter(category=product.category).exclude(id=product.id)
+
+        recommended_products_serializer = ProductListSerializers(recommended_products, many=True)
+
+        return Response({
+            "detail": product_serializer.data,
+            "recommended_products": recommended_products_serializer.data
+        })
+
 
