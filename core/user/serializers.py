@@ -15,3 +15,17 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         return user
 
 
+class UserProfileListSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = MyUser
+        fields = (
+            'id',
+            'username',
+            'phone_number',
+            'email',
+            'cover',
+            'address',
+        )
+
+

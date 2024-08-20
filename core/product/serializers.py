@@ -87,4 +87,3 @@ class BrandCreateSerializer(serializers.ModelSerializer):
         model = Brand
         fields = ('logo', 'title')
 
-
