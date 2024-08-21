@@ -1,14 +1,17 @@
 from rest_framework.views import APIView, Response
 from rest_framework import generics
+from rest_framework.filters import OrderingFilter, SearchFilter
 from django.db.models import F
+from django_filters import rest_framework as filters
 
-from .models import Category, Image, Brand, Product, Banner
+from .models import Category, Image, Brand, Product, Banner, Basket
 from .serializers import (
     ProductListSerializers, BannerListSerializer, BrandListSerializer, SpecialProductListSerializers,
-    BrandCreateSerializer, ProductDetailSerializer)
+    BrandCreateSerializer, ProductDetailSerializer, BasketCreateSerializer)
+from .filters import ProductListFilter
 
 
-class ProductListView(APIView):
+class MainPageView(APIView):
 
     def get(self, request):
 
@@ -51,5 +54,23 @@ class ProductDetailView(generics.RetrieveAPIView):
             "detail": product_serializer.data,
             "recommended_products": recommended_products_serializer.data
         })
+
+
+class BasketCreateView(generics.CreateAPIView):
+    queryset = Basket.objects.all()
+    serializer_class = BasketCreateSerializer
+
+
+class ProductListView(generics.ListAPIView):
+    serializer_class = ProductListSerializers
+    filter_backends = [filters.DjangoFilterBackend, OrderingFilter, SearchFilter]
+    filterset_class = ProductListFilter
+    ordering_fields = ['created_date', 'price']
+    search_fields = ['title']
+
+    def get_queryset(self):
+        queryset = Product.objects.filter(is_active=True)
+
+        return queryset
 
 

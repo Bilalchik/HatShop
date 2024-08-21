@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Category, Image, Brand, Product, Banner
+from .models import Category, Image, Brand, Product, Banner, Basket
 
 
 class ImageListSerializer(serializers.ModelSerializer):
@@ -86,4 +86,17 @@ class BrandCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Brand
         fields = ('logo', 'title')
+
+
+class BasketCreateSerializer(serializers.ModelSerializer):
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+
+    class Meta:
+        model = Basket
+        fields = (
+            'user',
+            'product',
+            'quantity',
+            'address',
+        )
 

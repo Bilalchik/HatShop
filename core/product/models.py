@@ -1,4 +1,9 @@
+from django.contrib.auth import get_user_model
 from django.db import models
+from django.core.validators import MinValueValidator
+import uuid
+
+User = get_user_model()
 
 
 class Banner(models.Model):
@@ -95,4 +100,29 @@ class Brand(models.Model):
         return self.title
 
 
+class Basket(models.Model):
+    user = models.ForeignKey(User, on_delete=models.PROTECT)
+    product = models.ForeignKey(Product, on_delete=models.PROTECT)
+    quantity = models.PositiveSmallIntegerField(validators=[MinValueValidator(1)])
+    unique_code = models.CharField(unique=True, max_length=16, blank=True, null=True, help_text='Необязательно')
+    address = models.CharField(max_length=223)
+    status = models.PositiveSmallIntegerField(
+        choices=(
+            (1, 'Отказ'),
+            (2, 'В ожидании'),
+            (3, 'Успешно'),
+        ),
+        default=2
+    )
+    created_date = models.DateTimeField(auto_now_add=True)
+    update_date = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return str(self.user)
+
+    def save(self, *args, **kwargs):
+
+        test = self.unique_code = str(uuid.uuid4())[:16]
+        print(test)
+
+        return super().save(*args, **kwargs)
