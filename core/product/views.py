@@ -9,6 +9,7 @@ from .serializers import (
     ProductListSerializers, BannerListSerializer, BrandListSerializer, SpecialProductListSerializers,
     BrandCreateSerializer, ProductDetailSerializer, BasketCreateSerializer)
 from .filters import ProductListFilter
+from .paginations import ProductPagination
 
 
 class MainPageView(APIView):
@@ -67,6 +68,7 @@ class ProductListView(generics.ListAPIView):
     filterset_class = ProductListFilter
     ordering_fields = ['created_date', 'price']
     search_fields = ['title']
+    pagination_class = ProductPagination
 
     def get_queryset(self):
         queryset = Product.objects.filter(is_active=True)
